@@ -126,31 +126,32 @@ listImages = open('bmimagesResized/files.txt', 'w')
 # Iterate over the results
 for result in results["results"]["bindings"]:
     image = result["image"]["value"]
-    if os.path.isfile(os.path.join('bmimages', os.path.basename(image))):
+    if os.path.isfile(os.path.join(paths['bmimages'], os.path.basename(image))):
         print "File already exists"
     else:
-        path = os.path.join('bmimages', os.path.basename(image))
+        path = os.path.join(paths['bmimages'], os.path.basename(image))
         urllib.urlretrieve(image, path)
         print "Image " + os.path.basename(image) + " downloaded"
 
-for file in os.listdir('bmimages'):
+for file in os.listdir(paths['bmimages']):
     if not file.startswith('.'):
-        listImages.write(os.path.join("bmimagesResized", os.path.basename(file)) + "\n")
+        listImages.write(os.path.join(paths["bmimagesResized"], os.path.basename(file)) + "\n")
 
 # Iterate through files and crop as required
-for file in os.listdir('bmimages'):
+for file in os.listdir(paths['bmimages']):
     # Make sure file is not a hidden one etc
-    if not file.startswith('.') and os.path.isfile(os.path.join('bmimages', file)):
+    if not file.startswith('.') and os.path.isfile(os.path.join(paths['bmimages'], file)):
         # Open the file checking if it is valid or not. It fails otherwise :-(
         try:
-            if not os.path.exists(os.path.join('bmimagesResized', file)):
-                resize_and_crop(os.path.join('bmimages', file), os.path.join('bmimagesResized', file), (300, 300))
+            if not os.path.exists(os.path.join(paths['bmimagesResized'], file)):
+                resize_and_crop(os.path.join(paths['bmimages'], file), os.path.join(paths['bmimagesResized'], file), (300, 300))
                 print file + " resized"
             else:
                 print "Resized file exists"
         except:
             pass
 
+# Amended to be relevant to the base path?
 cascPath = "opencv/haarcascade_frontalface_default.xml"
 # Check you have this file, if not get it
 if not os.path.isfile(cascPath):
@@ -160,11 +161,11 @@ if not os.path.isfile(cascPath):
 # Create the haar cascade
 faceCascade = cv2.CascadeClassifier(cascPath)
 start = time.time()
-for file in os.listdir('bmimages'):
+for file in os.listdir(paths['bmimages']):
     if not file.startswith('.'):
         start = time.time()
-        print "Detecting faces in " + os.path.join(basePath, 'bmimages', file)
-        image = cv2.imread(os.path.join(basePath, 'bmimages', file))
+        print "Detecting faces in " + os.path.join(paths['bmimages'], file)
+        image = cv2.imread(os.path.join(paths['bmimages'], file))
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = faceCascade.detectMultiScale(
@@ -182,7 +183,7 @@ for file in os.listdir('bmimages'):
         if(len(faces) > 0):
             for (x, y, w, h) in faces:
                 image  = image[y-top:y+h+bottom, x-left:x+w+right]
-                filename = "facesDetected/cropped_{1}_{0}".format(str(file),str(x))
+                filename = os.path.join(paths["facesDetected"], "cropped_{1}_{0}".format(str(file),str(x)))
                 if not os.path.exists(filename):
                     cv2.imwrite(filename, image)
 
@@ -191,13 +192,13 @@ end = time.time()
 print(end - start)
 
 # Iterate through files and crop as required
-for file in os.listdir('facesDetected'):
+for file in os.listdir(paths['facesDetected']):
     # Make sure file is not a hidden one etc
-    if not file.startswith('.') and os.path.isfile(os.path.join('facesDetected', file)):
+    if not file.startswith('.') and os.path.isfile(os.path.join(paths["facesDetected"], file)):
         # Open the file checking if it is valid or not. It fails otherwise :-(
         try:
-            if not os.path.exists(os.path.join('facesDetected', file)):
-                resize_and_crop(os.path.join('facesDetected', file), os.path.join('facesDetected', file), (300, 300))
+            if not os.path.exists(os.path.join(paths["facesDetected"], file)):
+                resize_and_crop(os.path.join(paths["facesDetected"], file), os.path.join(paths["facesDetected"], file), (300, 300))
                 print file + " resized"
             else:
                 print "Resized file exists"
@@ -213,7 +214,7 @@ def count_files( path, extension ):
             count += 1
     return count
 
-a = count_files("facesDetected", ".jpg")
+a = count_files(paths["facesDetected"], ".jpg")
 print  str(a) + " faces were identified"
 dims = "10x" + str(a/10)
 print dims
