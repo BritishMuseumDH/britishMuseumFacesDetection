@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import print_function
+
 ## Retrieve images from British Museum Research Space and perform montage and facial recognition
 ## Daniel Pett 21/3/2017
 ## British Museum content is under a CC-BY-SA-NC license
@@ -132,11 +134,11 @@ listImages = open('bmimagesResized/files.txt', 'w')
 for result in results["results"]["bindings"]:
     image = result["image"]["value"]
     if os.path.isfile(os.path.join('bmimages', os.path.basename(image))):
-        print "File already exists"
+        print("File already exists")
     else:
         path = os.path.join('bmimages', os.path.basename(image))
         urllib.urlretrieve(image, path)
-        print "Image " + os.path.basename(image) + " downloaded"
+        print("Image " + os.path.basename(image) + " downloaded")
 
 for file in os.listdir('bmimages'):
     if not file.startswith('.'):
@@ -150,9 +152,9 @@ for file in os.listdir('bmimages'):
         try:
             if not os.path.exists(os.path.join('bmimagesResized', file)):
                 resize_and_crop(os.path.join('bmimages', file), os.path.join('bmimagesResized', file), (300, 300))
-                print file + " resized"
+                print(file + " resized")
             else:
-                print "Resized file exists"
+                print("Resized file exists")
         except:
             pass
 
@@ -168,7 +170,7 @@ start = time.time()
 for file in os.listdir('bmimages'):
     if not file.startswith('.'):
         start = time.time()
-        print "Detecting faces in " + os.path.join(basePath, 'bmimages', file)
+        print("Detecting faces in " + os.path.join(basePath, 'bmimages', file))
         image = cv2.imread(os.path.join(basePath, 'bmimages', file))
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -203,9 +205,9 @@ for file in os.listdir('facesDetected'):
         try:
             if not os.path.exists(os.path.join('facesDetected', file)):
                 resize_and_crop(os.path.join('facesDetected', file), os.path.join('facesDetected', file), (300, 300))
-                print file + " resized"
+                print(file + " resized")
             else:
-                print "Resized file exists"
+                print("Resized file exists")
         except:
             pass
 
@@ -219,9 +221,9 @@ def count_files( path, extension ):
     return count
 
 a = count_files("facesDetected", ".jpg")
-print  str(a) + " faces were identified"
+print(str(a) + " faces were identified")
 dims = "10x" + str(a/10)
-print dims
+print(dims)
 
 def create_montage( file ):
     """
@@ -230,7 +232,7 @@ def create_montage( file ):
     :return:
     """
     if os.path.isfile(file):
-        print "File exists"
+        print("File exists")
         try:
             # Make sure you are in correct directory
             # This will produce multiple tiles for large results
