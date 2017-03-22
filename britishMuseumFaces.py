@@ -82,26 +82,26 @@ def count_files( path, extension ):
     list_dir = []
     list_dir = os.listdir(path)
     count = 0
-    for file in list_dir:
-        if file.endswith(extension):  # eg: '.txt'
+    for fn in list_dir:
+        if fn.endswith(extension):  # eg: '.txt'
             count += 1
     return count
 
-def create_montage( file ):
+def create_montage( fn ):
     """
     Create the montage if file exists with a try catch block
     :param file:
     :return:
     """
-    if os.path.isfile(file):
+    if os.path.isfile(fn):
         print "File exists"
         try:
             # Make sure you are in correct directory
             # This will produce multiple tiles for large results
             # Make sure you are in correct directory
-            make_executable(file)
+            make_executable(fn)
             #time.sleep(5)
-            subprocess.call("montage -border 0 -geometry 660x -tile 10x10 @" + os.path.basename(file) + " montages/bmPortraitBusts.jpg", shell=True)
+            subprocess.call("montage -border 0 -geometry 660x -tile 10x10 @" + os.path.basename(fn) + " montages/bmPortraitBusts.jpg", shell=True)
             # This call makes a montage of the faces detected
             subprocess.call("montage -border 0 -geometry 660x -tile " + dims + " facesDetected/* montages/bmPortraitBustsFaces.jpg", shell=True)
         except:
@@ -163,19 +163,19 @@ WHERE {
             urllib.urlretrieve(image, path)
             print "Image " + os.path.basename(image) + " downloaded"
 
-    for file in os.listdir(paths['bmimages']):
-        if not file.startswith('.'):
-            listImages.write(os.path.join(paths["bmimagesResized"], os.path.basename(file)) + "\n")
+    for fn in os.listdir(paths['bmimages']):
+        if not fn.startswith('.'):
+            listImages.write(os.path.join(paths["bmimagesResized"], os.path.basename(fn)) + "\n")
 
     # Iterate through files and crop as required
-    for file in os.listdir(paths['bmimages']):
+    for fn in os.listdir(paths['bmimages']):
         # Make sure file is not a hidden one etc
-        if not file.startswith('.') and os.path.isfile(os.path.join(paths['bmimages'], file)):
+        if not fn.startswith('.') and os.path.isfile(os.path.join(paths['bmimages'], fn)):
             # Open the file checking if it is valid or not. It fails otherwise :-(
             try:
-                if not os.path.exists(os.path.join(paths['bmimagesResized'], file)):
-                    resize_and_crop(os.path.join(paths['bmimages'], file), os.path.join(paths['bmimagesResized'], file), (300, 300))
-                    print file + " resized"
+                if not os.path.exists(os.path.join(paths['bmimagesResized'], fn)):
+                    resize_and_crop(os.path.join(paths['bmimages'], fn), os.path.join(paths['bmimagesResized'], fn), (300, 300))
+                    print fn + " resized"
                 else:
                     print "Resized file exists"
             except:
@@ -191,11 +191,11 @@ WHERE {
     # Create the haar cascade
     faceCascade = cv2.CascadeClassifier(cascPath)
     start = time.time()
-    for file in os.listdir(paths['bmimages']):
-        if not file.startswith('.'):
+    for fn in os.listdir(paths['bmimages']):
+        if not fn.startswith('.'):
             start = time.time()
-            print "Detecting faces in " + os.path.join(paths['bmimages'], file)
-            image = cv2.imread(os.path.join(paths['bmimages'], file))
+            print "Detecting faces in " + os.path.join(paths['bmimages'], fn)
+            image = cv2.imread(os.path.join(paths['bmimages'], fn))
 
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             faces = faceCascade.detectMultiScale(
@@ -213,7 +213,7 @@ WHERE {
             if(len(faces) > 0):
                 for (x, y, w, h) in faces:
                     image  = image[y-top:y+h+bottom, x-left:x+w+right]
-                    filename = os.path.join(paths["facesDetected"], "cropped_{1}_{0}".format(str(file),str(x)))
+                    filename = os.path.join(paths["facesDetected"], "cropped_{1}_{0}".format(str(fn),str(x)))
                     if not os.path.exists(filename):
                         cv2.imwrite(filename, image)
 
@@ -222,14 +222,14 @@ WHERE {
     print(end - start)
 
     # Iterate through files and crop as required
-    for file in os.listdir(paths['facesDetected']):
+    for fn in os.listdir(paths['facesDetected']):
         # Make sure file is not a hidden one etc
-        if not file.startswith('.') and os.path.isfile(os.path.join(paths["facesDetected"], file)):
+        if not fn.startswith('.') and os.path.isfile(os.path.join(paths["facesDetected"], fn)):
             # Open the file checking if it is valid or not. It fails otherwise :-(
             try:
-                if not os.path.exists(os.path.join(paths["facesDetected"], file)):
-                    resize_and_crop(os.path.join(paths["facesDetected"], file), os.path.join(paths["facesDetected"], file), (300, 300))
-                    print file + " resized"
+                if not os.path.exists(os.path.join(paths["facesDetected"], fn)):
+                    resize_and_crop(os.path.join(paths["facesDetected"], fn), os.path.join(paths["facesDetected"], fn), (300, 300))
+                    print fn + " resized"
                 else:
                     print "Resized file exists"
             except:
