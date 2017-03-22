@@ -29,17 +29,13 @@ args = parser.parse_args()
 # Change this to your script path
 basePath = args.path
 
-# Make the base directories
-if not os.path.exists(os.path.join(basePath, 'bmimages')):
-    os.makedirs(os.path.join(basePath, 'bmimages'))
-if not os.path.exists(os.path.join(basePath, 'bmimagesResized')):
-    os.makedirs(os.path.join(basePath, 'bmimagesResized'))
-if not os.path.exists(os.path.join(basePath, 'montages')):
-    os.makedirs(os.path.join(basePath, 'montages'))
-if not os.path.exists(os.path.join(basePath, 'facesDetected')):
-    os.makedirs(os.path.join(basePath, 'facesDetected'))
-if not os.path.exists(os.path.join(basePath, 'opencv')):
-    os.makedirs(os.path.join(basePath, 'opencv'))
+# Define the base directories
+paths = {x: os.path.join(basePath, x) for x in ['bmimages', 'bmimagesResized', 'montages', 'facesDetected', 'opencv']}
+
+# Create them if they don't already exist
+for path in paths.values():
+  if not os.path.exists(path):
+    os.makedirs(path)
 
 def make_executable(path):
     """
@@ -101,7 +97,6 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
         img = img.resize((size[0], size[1]),
                 Image.ANTIALIAS)
     img.save(modified_path)
-
 
 
 # Set up your sparql endpoint
