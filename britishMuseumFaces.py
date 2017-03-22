@@ -182,7 +182,7 @@ WHERE {
                 pass
 
     # Amended to be relevant to the base path?
-    cascPath = os.join.path(paths["opencv"], "haarcascade_frontalface_default.xml")
+    cascPath = os.path.join(paths["opencv"], "haarcascade_frontalface_default.xml")
     # Check you have this file, if not get it
     if not os.path.isfile(cascPath):
         haar = "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml"
