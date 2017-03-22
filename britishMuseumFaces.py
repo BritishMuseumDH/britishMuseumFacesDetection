@@ -182,11 +182,11 @@ WHERE {
                 pass
 
     # Amended to be relevant to the base path?
-    cascPath = "opencv/haarcascade_frontalface_default.xml"
+    cascPath = os.join.path(paths["opencv"], "haarcascade_frontalface_default.xml")
     # Check you have this file, if not get it
     if not os.path.isfile(cascPath):
         haar = "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml"
-        urllib.urlretrieve(haar, os.path.join("opencv", os.path.basename(haar)))
+        urllib.urlretrieve(haar, cascPath)
 
     # Create the haar cascade
     faceCascade = cv2.CascadeClassifier(cascPath)
