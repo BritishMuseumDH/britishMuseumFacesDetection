@@ -6,6 +6,8 @@ using OpenCV, recognise faces within the images. These are then cropped and stor
 This is a very simple example and pulls portrait busts (100 of them) from the British Museum collection and uses them to
 create image montages. Within the folder are all the files pulled from the example script.
 
+* I am rubbish at Python, so this is a learning project. *
+
 # To use
 
 Clone this folder to your computer:
