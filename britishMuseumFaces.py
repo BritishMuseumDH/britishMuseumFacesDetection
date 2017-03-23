@@ -4,11 +4,13 @@ from __future__ import print_function
 ## Retrieve images from British Museum Research Space and perform montage and facial recognition
 ## Daniel Pett 21/3/2017
 ## British Museum content is under a CC-BY-SA-NC license
-__author__ = 'portableant'
-__license__ = 'CC-BY'
+__author__ = "Daniel Pett"
+__credits__ =  ["Richard Wareham", "Ben O'Steen"]
+__license__ = 'MIT'
+__version__ = "1.0.1"
+__maintainer__ = "Daniel Pett"
+__email__ = "dpett@britishmuseum.org"
 ## Tested on Python 2.7.13
-## You will need to download the opencv file haarcascade_frontalface_default.xml for the facial bit to work and place
-## this in opencv folder
 
 from SPARQLWrapper import SPARQLWrapper, JSON
 import urllib
@@ -81,11 +83,18 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
     img.save(modified_path)
 
 def count_files( path, extension ):
+    """
+    Count number of files of a specific extension
+    :param path:
+    :param extension:
+    :return:
+    """
     list_dir = []
     list_dir = os.listdir(path)
     count = 0
     for fn in list_dir:
-        if fn.endswith(extension):  # eg: '.txt'
+        if fn.endswith(extension):
+            # eg: '.jpg'
             count += 1
     return count
 
