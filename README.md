@@ -3,8 +3,18 @@
 This repository holds a sample terminal script for interacting with the British Museum's RDF endpoint to retrieve images and then
 using OpenCV, recognise faces within the images. These are then cropped and stored in a directory on your machine.
 
-This is a very simple example and pulls portrait busts (100 of them) from the British Museum collection and uses them to
+This is a very simple example and pulls  busts (100 of them) from the British Museum collection and uses them to
 create image montages. Within the folder are all the files pulled from the example script.
+
+An example detected face can be shown below:
+
+Original image
+
+![](bmimagesResized/AN00587263_001_l.jpg)
+
+Detected face
+
+![](facesDetected/cropped_272_AN00587263_001_l.jpg)
 
 **I am rubbish at Python, so this is a learning project.**
 
