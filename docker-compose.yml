@@ -1,0 +1,7 @@
+version: "3"
+services:
+  bmfaces:
+    build:
+      context: .
+    volumes:
+      - .:/bmfaces
