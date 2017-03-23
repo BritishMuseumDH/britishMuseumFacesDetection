@@ -21,6 +21,7 @@ import cv2
 import argparse
 import time
 
+
 def make_executable(path):
     """
     Make the file executable
@@ -30,6 +31,7 @@ def make_executable(path):
     mode = os.stat(path).st_mode
     mode |= (mode & 0o444) >> 2    # copy R bits to X
     os.chmod(path, mode)
+
 
 # Function defined for resize and crop of an image
 def resize_and_crop(img_path, modified_path, size, crop_type='top'):
@@ -82,6 +84,7 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
                 Image.ANTIALIAS)
     img.save(modified_path)
 
+
 def count_files( path, extension ):
     """
     Count number of files of a specific extension
@@ -98,29 +101,6 @@ def count_files( path, extension ):
             count += 1
     return count
 
-def create_montage( fn ):
-    """
-    Create the montage if file exists with a try catch block
-    :param file:
-    :return:
-    """
-    if os.path.isfile(fn):
-        print("File exists")
-        try:
-            # Make sure you are in correct directory
-            # This will produce multiple tiles for large results
-            # Make sure you are in correct directory
-            make_executable(fn)
-            #time.sleep(5)
-            subprocess.call("montage -border 0 -geometry 660x -tile 10x10 @" + os.path.basename(fn) + " montages/bmPortraitBusts.jpg", shell=True)
-            subprocess.call("convert montages/bmPortraitBusts.jpg -resize 750 montages/bmPortraitBusts_montage_750w.jpg", shell=True)
-            # This call makes a montage of the faces detected
-            subprocess.call("montage -border 0 -geometry 660x -tile " + dims + " facesDetected/* montages/bmPortraitBustsFaces.jpg", shell=True)
-            subprocess.call("convert montages/bmPortraitBustsFaces.jpg -resize 750 montages/bmPortraitBustsFaces_montage_750w.jpg", shell=True)
-        except:
-            # The process failed
-            raise ValueError("Montage generation failed")
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='A script for retrieving images from British Museum Research Space and '
                                              'perform montage and facial recognition')
@@ -128,14 +108,32 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--path', help='The path in which to run this script', required=True)
     # An example would be: --path '/Users/danielpett/githubProjects/scripts/'
 
+    parser.add_argument('-m', '--montages', help='The path in which to place montage images', required=True)
+    # An example would be: --montages '/Users/danielpett/githubProjects/scripts/montages/'
+
+    parser.add_argument('-d', '--download', help='The path in which to place downloaded images', required=True)
+    # An example would be: --download '/Users/danielpett/githubProjects/scripts/bmimages/'
+
+    parser.add_argument('-f', '--faces', help='The path in which to place face detected images', required=True)
+    # An example would be: --faces '/Users/danielpett/githubProjects/scripts/facesDetected/'
+
+    parser.add_argument('-r', '--resized', help='The path in which to place resized images', required=True)
+    # An example would be: --resized '/Users/danielpett/githubProjects/scripts/bmimagesResized/'
+
+    parser.add_argument('-s', '--size', help='The resize dimensions', required=False, default=300)
+    # An example would be: --resized '/Users/danielpett/githubProjects/scripts/bmimagesResized/'
+
+    parser.add_argument('-o', '--output', help='The file name output for image magick', required="false", default='britishMuseumImages')
+
     # Parse arguments
     args = parser.parse_args()
 
-    # Change this to your script path
     basePath = args.path
 
+
+
     # Define the base directories
-    paths = {x: os.path.join(basePath, x) for x in ['bmimages', 'bmimagesResized', 'montages', 'facesDetected', 'opencv']}
+    paths = {x: os.path.join(basePath, x) for x in [args.download, args.resized, args.montages, args.faces, 'opencv']}
 
     # Create them if they don't already exist
     for path in paths.values():
@@ -163,31 +161,31 @@ WHERE {
     results = sparql.query().convert()
 
     # Open the file for writing urls (this is for image magick)
-    listImages = open(os.path.join(paths['bmimagesResized'], "files.txt"), 'w')
+    listImages = open(os.path.join(paths[args.resized], "files.txt"), 'w')
 
 
     # Iterate over the results
     for result in results["results"]["bindings"]:
         image = result["image"]["value"]
-        if os.path.isfile(os.path.join(paths['bmimages'], os.path.basename(image))):
+        if os.path.isfile(os.path.join(paths[args.download], os.path.basename(image))):
             print("File already exists")
         else:
-            path = os.path.join(paths['bmimages'], os.path.basename(image))
+            path = os.path.join(paths[args.download], os.path.basename(image))
             urllib.urlretrieve(image, path)
             print("Image " + os.path.basename(image) + " downloaded")
 
-    for fn in os.listdir(paths['bmimages']):
+    for fn in os.listdir(paths[args.download]):
         if not fn.startswith('.'):
-            listImages.write(os.path.join(paths["bmimagesResized"], os.path.basename(fn)) + "\n")
+            listImages.write(os.path.join(paths[args.resized], os.path.basename(fn)) + "\n")
 
     # Iterate through files and crop as required
-    for fn in os.listdir(paths['bmimages']):
+    for fn in os.listdir(paths[args.download]):
         # Make sure file is not a hidden one etc
-        if not fn.startswith('.') and os.path.isfile(os.path.join(paths['bmimages'], fn)):
+        if not fn.startswith('.') and os.path.isfile(os.path.join(paths[args.download], fn)):
             # Open the file checking if it is valid or not. It fails otherwise :-(
             try:
-                if not os.path.exists(os.path.join(paths['bmimagesResized'], fn)):
-                    resize_and_crop(os.path.join(paths['bmimages'], fn), os.path.join(paths['bmimagesResized'], fn), (300, 300))
+                if not os.path.exists(os.path.join(paths[args.resized], fn)):
+                    resize_and_crop(os.path.join(paths[args.download], fn), os.path.join(paths[args.resized], fn), (args.size, args.size))
                     print(fn + " resized")
                 else:
                     print("Resized file exists")
@@ -204,11 +202,10 @@ WHERE {
     # Create the haar cascade
     faceCascade = cv2.CascadeClassifier(cascPath)
     start = time.time()
-    for fn in os.listdir(paths['bmimages']):
+    for fn in os.listdir(paths[args.download]):
         if not fn.startswith('.'):
-            start = time.time()
-            print("Detecting faces in " + os.path.join(paths['bmimages'], fn))
-            image = cv2.imread(os.path.join(paths['bmimages'], fn))
+            print("Detecting faces in " + os.path.join(paths[args.download], fn))
+            image = cv2.imread(os.path.join(paths[args.download], fn))
 
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             faces = faceCascade.detectMultiScale(
@@ -227,39 +224,78 @@ WHERE {
             if(len(faces) > 0):
                 for (x, y, w, h) in faces:
                     image = image[y-top:y+h+bottom, x-left:x+w+right]
-                    filename = os.path.join(paths["facesDetected"], "cropped_{1}_{0}".format(str(fn),str(x)))
+                    filename = os.path.join(paths[args.faces], "cropped_{1}_{0}".format(str(fn),str(x)))
                     if not os.path.exists(filename):
                         cv2.imwrite(filename, image)
                         filesize = os.stat(filename).st_size
                         try:
                             if not filesize ==0:
-                                resize_and_crop(filename, filename, (300, 300))
+                                resize_and_crop(filename, filename, (args.size, args.size),crop_type='middle')
                             else:
-                                print(filename + " is likely to be broken")
+                                print(filename + " is likely to be broken.")
+                                os.remove(filename)
+                                print(filename + " has therefore been removed.")
                         except:
                             pass
 
     end = time.time()
-    print(end - start)
+    print("The time taken to process face detection was: " + "--- %s seconds ---" % (end - start))
 
     # Iterate through files and crop as required
-    for fn in os.listdir(paths['facesDetected']):
+    for fn in os.listdir(paths[args.faces]):
         # Make sure file is not a hidden one etc
-        if not fn.startswith('.') and os.path.isfile(os.path.join(paths["facesDetected"], fn)):
+        if not fn.startswith('.') and os.path.isfile(os.path.join(paths[args.faces], fn)):
             # Open the file checking if it is valid or not. It fails otherwise :-(
             try:
-                if not os.path.exists(os.path.join(paths["facesDetected"], fn)):
-                    resize_and_crop(os.path.join(paths["facesDetected"], fn), os.path.join(paths["facesDetected"], fn), (300, 300))
+                if not os.path.exists(os.path.join(paths[args.faces], fn)):
+                    resize_and_crop(os.path.join(paths[args.faces], fn), os.path.join(paths[args.faces], fn), (args.size, args.size))
                     print(fn + " resized")
                 else:
                     print("Resized file exists")
             except:
                 pass
 
-
-    a = count_files(paths["facesDetected"], ".jpg")
+    a = count_files(paths[args.faces], ".jpg")
     print(str(a) + " faces were identified in total")
     dims = "10x" + str(a/10)
-    print(dims)
+    print("The dimensions of the montage are " + dims)
+
+
+    def create_montage(fn):
+        """
+        Create the montage if file exists with a try catch block
+        :param file:
+        :return:
+        """
+        if os.path.isfile(fn):
+            print("File exists")
+            try:
+                # Make sure you are in correct directory
+                # This will produce multiple tiles for large results
+                # Make sure you are in correct directory
+                make_executable(fn)
+                print("Now creating image montage of all retrieved images")
+                subprocess.call("montage @" + os.path.basename(
+                    fn) + " -border 0 -geometry 660x -tile 10x10 " + "/".join([args.montages, args.output]) + ".jpg",
+                                shell=True)
+                print("Now resizing image montage of all retrieved images")
+                subprocess.call(
+                    "convert " + "/".join([args.montages, args.output]) + ".jpg -resize 750 "
+                    + "/".join([args.montages, args.output]) + "_montage_750w.jpg",
+                    shell=True)
+                # This call makes a montage of the faces detected
+                print("Now creating image montage of all faces detected in images")
+                subprocess.call(
+                    "montage -border 0 -geometry 660x -tile " + dims + " " + args.faces + "/* "
+                    + "/".join([args.montages, args.output]) + "Faces.jpg",
+                    shell=True)
+                print("Now resizing image montage of all faces detected in images")
+                subprocess.call(
+                    "convert " + "/".join([args.montages, args.output]) + "Faces.jpg -resize 750 " +
+                    "/".join([args.montages, args.output]) + "Faces_montage_750w.jpg",
+                    shell=True)
+            except:
+                # The process failed
+                raise ValueError("Montage generation failed")
 
     create_montage("files.txt")

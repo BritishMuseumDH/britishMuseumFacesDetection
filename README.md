@@ -42,9 +42,22 @@ Install the requirements (I recommend doing this in a virtual environment):
 
 `$ pip install -r requirements.txt`
 
-Now run the script:
+Now run the script (for example):
 
-`$ python britishMuseumFaces.py -p /path/to/folder`
+`$ python python britishMuseumFaces.py -p . -d bmimages -f facesDetected -r bmimagesResized -m montages -s 200 -o 'bmImages' `
+
+There are several arguments that you use for this script:
+
+Mandatory:
+* Path -p or --path
+* Download directory -d or --directory
+* Faces directory -f or --faces
+* Resize durectory -r or --resized
+* Montages directory -m or --montages
+
+Optional
+* Size of cropped image -s or --size (default 300)
+* Output file -o or --output (default bmImages)
 
 This should run and output any error messages to your terminal.
 
