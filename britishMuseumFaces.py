@@ -221,9 +221,10 @@ WHERE {
             right = 10
             top = 10
             bottom = 10
+            print("Found {0} faces within the image".format(len(faces)))
             if(len(faces) > 0):
                 for (x, y, w, h) in faces:
-                    image  = image[y-top:y+h+bottom, x-left:x+w+right]
+                    image = image[y-top:y+h+bottom, x-left:x+w+right]
                     filename = os.path.join(paths["facesDetected"], "cropped_{1}_{0}".format(str(fn),str(x)))
                     if not os.path.exists(filename):
                         cv2.imwrite(filename, image)
@@ -248,7 +249,7 @@ WHERE {
 
 
     a = count_files(paths["facesDetected"], ".jpg")
-    print(str(a) + " faces were identified")
+    print(str(a) + " faces were identified in total")
     dims = "10x" + str(a/10)
     print(dims)
 
