@@ -113,8 +113,10 @@ def create_montage( fn ):
             make_executable(fn)
             #time.sleep(5)
             subprocess.call("montage -border 0 -geometry 660x -tile 10x10 @" + os.path.basename(fn) + " montages/bmPortraitBusts.jpg", shell=True)
+            subprocess.call("convert montages/bmPortraitBusts.jpg -resize 750 montages/bmPortraitBusts_montage_750w.jpg", shell=True)
             # This call makes a montage of the faces detected
             subprocess.call("montage -border 0 -geometry 660x -tile " + dims + " facesDetected/* montages/bmPortraitBustsFaces.jpg", shell=True)
+            subprocess.call("convert montages/bmPortraitBustsFaces.jpg -resize 750 montages/bmPortraitBustsFaces_montage_750w.jpg", shell=True)
         except:
             # The process failed
             raise ValueError("Montage generation failed")
@@ -228,7 +230,14 @@ WHERE {
                     filename = os.path.join(paths["facesDetected"], "cropped_{1}_{0}".format(str(fn),str(x)))
                     if not os.path.exists(filename):
                         cv2.imwrite(filename, image)
-
+                        filesize = os.stat(filename).st_size
+                        try:
+                            if not filesize ==0:
+                                resize_and_crop(filename, filename, (300, 300))
+                            else:
+                                print(filename + " is likely to be broken")
+                        except:
+                            pass
 
     end = time.time()
     print(end - start)
