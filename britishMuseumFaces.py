@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import print_function
+
 ## Retrieve images from British Museum Research Space and perform montage and facial recognition
 ## Daniel Pett 21/3/2017
 ## British Museum content is under a CC-BY-SA-NC license
@@ -94,7 +96,7 @@ def create_montage( fn ):
     :return:
     """
     if os.path.isfile(fn):
-        print "File exists"
+        print("File exists")
         try:
             # Make sure you are in correct directory
             # This will produce multiple tiles for large results
@@ -157,11 +159,11 @@ WHERE {
     for result in results["results"]["bindings"]:
         image = result["image"]["value"]
         if os.path.isfile(os.path.join(paths['bmimages'], os.path.basename(image))):
-            print "File already exists"
+            print("File already exists")
         else:
             path = os.path.join(paths['bmimages'], os.path.basename(image))
             urllib.urlretrieve(image, path)
-            print "Image " + os.path.basename(image) + " downloaded"
+            print("Image " + os.path.basename(image) + " downloaded")
 
     for fn in os.listdir(paths['bmimages']):
         if not fn.startswith('.'):
@@ -175,9 +177,9 @@ WHERE {
             try:
                 if not os.path.exists(os.path.join(paths['bmimagesResized'], fn)):
                     resize_and_crop(os.path.join(paths['bmimages'], fn), os.path.join(paths['bmimagesResized'], fn), (300, 300))
-                    print fn + " resized"
+                    print(fn + " resized")
                 else:
-                    print "Resized file exists"
+                    print("Resized file exists")
             except:
                 pass
 
@@ -194,7 +196,7 @@ WHERE {
     for fn in os.listdir(paths['bmimages']):
         if not fn.startswith('.'):
             start = time.time()
-            print "Detecting faces in " + os.path.join(paths['bmimages'], fn)
+            print("Detecting faces in " + os.path.join(paths['bmimages'], fn))
             image = cv2.imread(os.path.join(paths['bmimages'], fn))
 
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -229,16 +231,16 @@ WHERE {
             try:
                 if not os.path.exists(os.path.join(paths["facesDetected"], fn)):
                     resize_and_crop(os.path.join(paths["facesDetected"], fn), os.path.join(paths["facesDetected"], fn), (300, 300))
-                    print fn + " resized"
+                    print(fn + " resized")
                 else:
-                    print "Resized file exists"
+                    print("Resized file exists")
             except:
                 pass
 
 
     a = count_files(paths["facesDetected"], ".jpg")
-    print  str(a) + " faces were identified"
+    print(str(a) + " faces were identified")
     dims = "10x" + str(a/10)
-    print dims
+    print(dims)
 
     create_montage("files.txt")
