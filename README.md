@@ -16,6 +16,16 @@ Detected face
 
 ![](facesDetected/cropped_272_AN00587263_001_l.jpg)
 
+There are also two montages created at the end of this script:
+
+All images originally pulled from RDF:
+
+![](montages/bmPortraitBusts_montage_750pw.jpg)
+
+All faces identified within the original images:
+
+![](montages/bmPortraitBustsFaces_montage_750pw.jpg)
+
 **I am rubbish at Python, so this is a learning project.**
 
 # To use
