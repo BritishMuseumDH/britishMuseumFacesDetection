@@ -20,11 +20,11 @@ There are also two montages created at the end of this script:
 
 All images originally pulled from RDF:
 
-![](montages/bmPortraitBusts_montage_750pw.jpg)
+![](montages/bmPortraitBusts_montage_750w.jpg)
 
 All faces identified within the original images:
 
-![](montages/bmPortraitBustsFaces_montage_750pw.jpg)
+![](montages/bmPortraitBustsFaces_montage_750w.jpg)
 
 **I am rubbish at Python, so this is a learning project.**
 
