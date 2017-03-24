@@ -177,6 +177,7 @@ WHERE {
     for fn in os.listdir(paths[args.download]):
         if not fn.startswith('.'):
             listImages.write(os.path.join(paths[args.resized], os.path.basename(fn)) + "\n")
+            print("Image path written to file")
 
     # Iterate through files and crop as required
     for fn in os.listdir(paths[args.download]):
@@ -299,3 +300,4 @@ WHERE {
                 raise ValueError("Montage generation failed")
 
     create_montage("files.txt")
+    print("Facial detection complete")
