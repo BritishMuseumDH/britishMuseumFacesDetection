@@ -5,3 +5,13 @@ services:
       context: .
     volumes:
       - .:/bmfaces
+    working_dir: /bmfaces
+    command: /bmfaces/bmfaces.sh
+    environment:
+      - BMFACES_PATH=./
+      - DOWNLOAD_DIRECTORY=bmimages
+      - FACES_DETECTED=facesDetected
+      - BMIMAGES_RESIZED=bmimagesResized
+      - MONTAGES=montages
+      - SIZE=200
+      - OUTPUT=bmImages
