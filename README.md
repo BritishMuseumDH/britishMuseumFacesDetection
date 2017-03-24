@@ -1,10 +1,25 @@
 ## A demonstration script for facial detection
 
-This repository holds a sample terminal script for interacting with the British Museum's RDF endpoint to retrieve images and then
+This repository holds a sample terminal script for interacting with the British Museum's [RDF endpoint](http://collection.britishmuseum.org) to retrieve images and then
 using OpenCV, recognise faces within the images. These are then cropped and stored in a directory on your machine.
 
 This is a very simple example and pulls  busts (100 of them) from the British Museum collection and uses them to
 create image montages. Within the folder are all the files pulled from the example script.
+
+This example script uses a very simple SPARQL query to retrieve 100 British Museum records of busts, where an image exists.
+
+`
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX crm: <http://erlangen-crm.org/current/>
+PREFIX fts: <http://www.ontotext.com/owlim/fts#>
+PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
+SELECT DISTINCT ?image
+WHERE {
+  ?object bmo:PX_object_type ?object_type .
+  ?object_type skos:prefLabel "bust" .
+  ?object bmo:PX_has_main_representation ?image .
+} LIMIT 100
+`
 
 An example detected face can be shown below:
 
@@ -83,6 +98,6 @@ MIT for script. CC-BY-NC-SA for all image content, copyright the Trustees of the
 
 # Authors
 
-Daniel Pett, The British Museum @portableant
-Ben O'Steen, The British Library @benosteen
-Richard Wareham, Cambridge University @rjw57
+* Daniel Pett, The British Museum @portableant
+* Ben O'Steen, The British Library @benosteen
+* Richard Wareham, Cambridge University @rjw57
