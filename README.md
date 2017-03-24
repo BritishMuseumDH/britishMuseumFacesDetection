@@ -13,7 +13,7 @@ PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX crm: <http://erlangen-crm.org/current/>
 PREFIX fts: <http://www.ontotext.com/owlim/fts#>
 PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
-SELECT DISTINCT ?image<
+SELECT DISTINCT ?image
 WHERE {
   ?object bmo:PX_object_type ?object_type .
   ?object_type skos:prefLabel "bust" .
@@ -101,3 +101,4 @@ MIT for script. CC-BY-NC-SA for all image content, copyright the Trustees of the
 * Daniel Pett, The British Museum @portableant
 * Ben O'Steen, The British Library @benosteen
 * Richard Wareham, Cambridge University @rjw57
+* Matthew Vincent, Rekrei @neshmi

@@ -5,7 +5,7 @@ from __future__ import print_function
 ## Daniel Pett 21/3/2017
 ## British Museum content is under a CC-BY-SA-NC license
 __author__ = "Daniel Pett"
-__credits__ =  ["Richard Wareham", "Ben O'Steen"]
+__credits__ =  ["Richard Wareham", "Ben O'Steen", "Matthew Vincent"]
 __license__ = 'MIT'
 __version__ = "1.0.1"
 __maintainer__ = "Daniel Pett"
