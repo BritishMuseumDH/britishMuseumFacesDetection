@@ -6,6 +6,3 @@ RUN pip install SPARQLWrapper Pillow
 
 # Define working directory.
 WORKDIR /bmfaces
-
-# Define default command.
-CMD ["python", "britishMuseumFaces.py", "-p", "./"]
