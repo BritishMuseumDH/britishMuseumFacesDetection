@@ -49,22 +49,40 @@ Now run the script (for example):
 There are several arguments that you use for this script:
 
 Mandatory:
-* Path -p or --path
-* Download directory -d or --directory
-* Faces directory -f or --faces
-* Resize durectory -r or --resized
-* Montages directory -m or --montages
+* Path: -p or --path
+* Download directory: -d or --directory
+* Faces directory: -f or --faces
+* Resize directory: -r or --resized
+* Montages directory: -m or --montages
 
 Optional
-* Size of cropped image -s or --size (default 300)
-* Output file -o or --output (default bmImages)
+* Size of cropped image: -s or --size (default 300)
+* Output file: -o or --output (default bmImages)
 
-This should run and output any error messages to your terminal.
+This should run and output any error messages to your terminal. Within the script, progress is printed into your terminal
+window. You should see the following messages when running for the first time:
+
+* Image {filename} downloaded **Multiple times**
+* Image path written to file **Multiple times**
+* {filename} resized **Multiple times**
+* Detecting faces in {filename} **Multiple times**
+* Found {number of} faces within the image **Multiple times**
+* The time taken to process face detection was: --- {x} seconds ---
+* {Total number of } faces were identified in total
+* The dimensions of the montage are {XbyY}
+* Now creating image montage of all retrieved images
+* Now resizing image montage of all retrieved images
+* Now creating image montage of all faces detected in images
+* Now resizing image montage of all faces detected in images
+* Facial detection complete
+
 
 # License
 
 MIT for script. CC-BY-NC-SA for all image content, copyright the Trustees of the British Museum.
 
-# Author
+# Authors
 
-Daniel Pett, Digital Humanities Lead, British Museum
+Daniel Pett, The British Museum @portableant
+Ben O'Steen, The British Library @benosteen
+Richard Wareham, Cambridge University @rjw57
