@@ -3,7 +3,7 @@
 This repository holds a sample terminal script for interacting with the British Museum's [RDF endpoint](http://collection.britishmuseum.org) to retrieve images and then
 using OpenCV, recognise faces within the images. These are then cropped and stored in a directory on your machine.
 
-This is a very simple example and pulls  busts (100 of them) from the British Museum collection and uses them to
+This is a very simple example and pulls busts (100 of them) from the British Museum collection and uses them to
 create image montages. Within the folder are all the files pulled from the example script.
 
 This example script uses a very simple SPARQL query to retrieve 100 British Museum records of busts, where an image exists.
@@ -59,7 +59,7 @@ Install the requirements (I recommend doing this in a virtual environment):
 
 Now run the script (for example):
 
-`$ python python britishMuseumFaces.py -p . -d bmimages -f facesDetected -r bmimagesResized -m montages -s 200 -o 'bmImages' `
+`$ python britishMuseumFaces.py -p . -d bmimages -f facesDetected -r bmimagesResized -m montages -s 200 -o 'bmImages' `
 
 There are several arguments that you use for this script:
 
