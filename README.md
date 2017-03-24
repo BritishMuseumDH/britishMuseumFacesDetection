@@ -9,15 +9,15 @@ create image montages. Within the folder are all the files pulled from the examp
 This example script uses a very simple SPARQL query to retrieve 100 British Museum records of busts, where an image exists.
 
 `
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX crm: <http://erlangen-crm.org/current/>
-PREFIX fts: <http://www.ontotext.com/owlim/fts#>
-PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
-SELECT DISTINCT ?image
-WHERE {
-  ?object bmo:PX_object_type ?object_type .
-  ?object_type skos:prefLabel "bust" .
-  ?object bmo:PX_has_main_representation ?image .
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#><br />
+PREFIX crm: <http://erlangen-crm.org/current/><br />
+PREFIX fts: <http://www.ontotext.com/owlim/fts#><br />
+PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/><br />
+SELECT DISTINCT ?image<br />
+WHERE {<br />
+  ?object bmo:PX_object_type ?object_type .<br />
+  ?object_type skos:prefLabel "bust" .<br />
+  ?object bmo:PX_has_main_representation ?image .<br />
 } LIMIT 100
 `
 
