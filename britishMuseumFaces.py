@@ -143,18 +143,13 @@ if __name__ == "__main__":
     # Set up your sparql endpoint
     sparql = SPARQLWrapper("http://collection.britishmuseum.org/sparql")
 
-    # Set your query
-    sparql.setQuery("""PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX crm: <http://erlangen-crm.org/current/>
-PREFIX fts: <http://www.ontotext.com/owlim/fts#>
-PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
+    # Read text file sparql query
+    with open("sparql/default.txt", "r") as sparqlQuery:
+        query = sparqlQuery.read()
 
-SELECT DISTINCT ?image
-WHERE {
-  ?object bmo:PX_object_type ?object_type .
-  ?object_type skos:prefLabel "bust" .
-  ?object bmo:PX_has_main_representation ?image .
-} LIMIT 100""")
+    print("Your sparql query reads as: \n" + query)
+    # Set your query
+    sparql.setQuery(query)
 
     # Return the JSON triples
     sparql.setReturnFormat(JSON)
