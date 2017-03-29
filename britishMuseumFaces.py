@@ -12,10 +12,11 @@ import time
 # Retrieve images from British Museum Research Space and perform montage and facial recognition
 # Daniel Pett 21/3/2017
 # British Museum content is under a CC-BY-SA-NC license
-# Tested on Python 2.7.13
+# Tested on Python 2.7.13, 3.5.2
 
 __author__ = "Daniel Pett"
-__credits__ =  ["Richard Wareham", "Ben O'Steen", "Matthew Vincent"]
+__credits__ =  ["Richard Wareham", "Ben O'Steen", "Matthew Vincent",
+                "Harrison Pim"]
 __license__ = 'MIT'
 __version__ = "1.0.1"
 __maintainer__ = "Daniel Pett"
@@ -83,21 +84,22 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
     img.save(modified_path)
 
 
-def count_files( path, extension ):
+def count_files(path, extension):
     """
-    Count number of files of a specific extension
-    :param path:
-    :param extension:
-    :return:
+    Count number of files of a specific extension in a directory
+
+    Parameters
+    ----------
+    path : string (required)
+        the path to the directory to be searched
+    extension : string (required)
+        the file extension being looked for, eg '.jpg', '.png'
     """
-    list_dir = []
+    # get list of files in dir
     list_dir = os.listdir(path)
-    count = 0
-    for fn in list_dir:
-        if fn.endswith(extension):
-            # eg: '.jpg'
-            count += 1
-    return count
+    # count occurences of extension
+    return sum([1 for fn in list_dir if fn.endswith(extension)])
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='A script for retrieving images from British Museum Research Space and '
