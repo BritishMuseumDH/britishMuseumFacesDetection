@@ -1,17 +1,5 @@
 #!/usr/bin/env python
 from __future__ import print_function
-
-## Retrieve images from British Museum Research Space and perform montage and facial recognition
-## Daniel Pett 21/3/2017
-## British Museum content is under a CC-BY-SA-NC license
-__author__ = "Daniel Pett"
-__credits__ =  ["Richard Wareham", "Ben O'Steen", "Matthew Vincent"]
-__license__ = 'MIT'
-__version__ = "1.0.1"
-__maintainer__ = "Daniel Pett"
-__email__ = "dpett@britishmuseum.org"
-## Tested on Python 2.7.13
-
 from SPARQLWrapper import SPARQLWrapper, JSON
 import urllib
 import os
@@ -20,6 +8,18 @@ import subprocess
 import cv2
 import argparse
 import time
+
+# Retrieve images from British Museum Research Space and perform montage and facial recognition
+# Daniel Pett 21/3/2017
+# British Museum content is under a CC-BY-SA-NC license
+# Tested on Python 2.7.13
+
+__author__ = "Daniel Pett"
+__credits__ =  ["Richard Wareham", "Ben O'Steen", "Matthew Vincent"]
+__license__ = 'MIT'
+__version__ = "1.0.1"
+__maintainer__ = "Daniel Pett"
+__email__ = "dpett@britishmuseum.org"
 
 
 def make_executable(path):
@@ -39,24 +39,22 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
     Resize and crop an image to fit the specified size.
     args:
         img_path: path for the image to resize.
-        modified_path: path to store the modified image.
-        size: (width, height) tuple. Eg (300,300)
-        crop_type: can be 'top', 'middle' or 'bottom'
+        modified_path: path to save the modified image.
+        size: (width, height) a tuple. Eg (300,300)
+        crop_type: 3 options 'top', 'middle' or 'bottom'
     raises:
-        Exception: if can not open the file in img_path of there is problems
-            to save the image.
-        ValueError: if an invalid `crop_type` is provided.
+        Exception: if this script cannot open the file provided by img_path, then the image will not save
+        ValueError: thrown if an invalid `crop_type` is provided as an argument
     """
-    # If height is higher we resize vertically, if not we resize horizontally
+    # Resizing is done in this order: if height is higher than width resize is vertical, default is horizontal resize
     img = Image.open(img_path)
     # Get current and desired ratio for the images
     img_ratio = img.size[0] / float(img.size[1])
     ratio = size[0] / float(size[1])
-    # The image is scaled/cropped vertically or horizontally depending on the ratio
+    # As mentioned above, the image is scaled and cropped vertically or horizontally depending on the ratio.
     if ratio > img_ratio:
-        img = img.resize((size[0], size[0] * img.size[1] / img.size[0]),
-                Image.ANTIALIAS)
-        # Crop in the top, middle or bottom
+        img = img.resize((size[0], size[0] * img.size[1] / img.size[0]), Image.ANTIALIAS)
+        # Switch for position of crop
         if crop_type == 'top':
             box = (0, 0, img.size[0], size[1])
         elif crop_type == 'middle':
@@ -69,7 +67,7 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
     elif ratio < img_ratio:
         img = img.resize((size[1] * img.size[0] / img.size[1], size[1]),
                 Image.ANTIALIAS)
-        # Switch for where to crops
+        # Switch for position of crop
         if crop_type == 'top':
             box = (0, 0, size[0], img.size[1])
         elif crop_type == 'middle':
@@ -123,14 +121,18 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--size', help='The resize dimensions', required=False, default=300)
     # An example would be: --resized '/Users/danielpett/githubProjects/scripts/bmimagesResized/'
 
-    parser.add_argument('-o', '--output', help='The file name output for image magick', required="false", default='britishMuseumImages')
+    parser.add_argument('-o', '--output', help='The file name output for image magick', required=False,
+                        default='britishMuseumImages')
     # An example would be 'britishMuseumPortraits'
 
-    parser.add_argument('-t', '--template', help='The spaqrl query template to use', required="false", default='default')
+    parser.add_argument('-t', '--template', help='The spaqrl query template to use', required=False, default='default')
     # An example would be 'default' as this is concatenated to default.txt
 
-    parser.add_argument('-q', '--query', help='The spaqrl query template to use', required="false", default='bust')
+    parser.add_argument('-q', '--query', help='The spaqrl query string to use', required=False, default='bust')
     # An example would be 'bust'
+
+    parser.add_argument('-e', '--endpoint', help='The spaqrl endpoint to use', required=False,
+                        default='http://collection.britishmuseum.org/sparql')
 
     # Parse arguments
     args = parser.parse_args()
@@ -147,7 +149,7 @@ if __name__ == "__main__":
             os.makedirs(path)
 
     # Set up your sparql endpoint
-    sparql = SPARQLWrapper("http://collection.britishmuseum.org/sparql")
+    sparql = SPARQLWrapper(args.endpoint)
 
     # Read text file sparql query
     with open("sparql/" + args.template + ".txt", "r") as sparqlQuery:

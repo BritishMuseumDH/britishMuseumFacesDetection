@@ -74,6 +74,7 @@ Optional
 * Output file: -o or --output (default bmImages)
 * SPARQL template to use: -t or --template (default.txt is used)
 * The query to use: -q or --query (default "bust")
+* The endpoint to use: -e or --endpoint (default http://collection.britishmuseum.org/sparql)
 
 This should run and output any error messages to your terminal. Within the script, progress is printed into your terminal
 window. You should see the following messages when running for the first time:
@@ -104,3 +105,9 @@ MIT for script. CC-BY-NC-SA for all image content, copyright the Trustees of the
 * Ben O'Steen, The British Library @benosteen
 * Richard Wareham, Cambridge University @rjw57
 * Matthew Vincent, Rekrei @neshmi
+
+# To do
+
+* PEP 8
+* Face matching
+* Use of apis as well as SPARQL
