@@ -309,5 +309,5 @@ if __name__ == "__main__":
                 # The process failed
                 raise ValueError("Montage generation failed")
 
-   # create_montage("files.txt")
+    create_montage("files.txt")
     print("Facial detection complete")
