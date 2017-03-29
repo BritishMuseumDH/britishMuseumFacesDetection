@@ -121,14 +121,18 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--size', help='The resize dimensions', required=False, default=300)
     # An example would be: --resized '/Users/danielpett/githubProjects/scripts/bmimagesResized/'
 
-    parser.add_argument('-o', '--output', help='The file name output for image magick', required="false", default='britishMuseumImages')
+    parser.add_argument('-o', '--output', help='The file name output for image magick', required=False,
+                        default='britishMuseumImages')
     # An example would be 'britishMuseumPortraits'
 
-    parser.add_argument('-t', '--template', help='The spaqrl query template to use', required="false", default='default')
+    parser.add_argument('-t', '--template', help='The spaqrl query template to use', required=False, default='default')
     # An example would be 'default' as this is concatenated to default.txt
 
-    parser.add_argument('-q', '--query', help='The spaqrl query template to use', required="false", default='bust')
+    parser.add_argument('-q', '--query', help='The spaqrl query string to use', required=False, default='bust')
     # An example would be 'bust'
+
+    parser.add_argument('-e', '--endpoint', help='The spaqrl endpoint to use', required=False,
+                        default='http://collection.britishmuseum.org/sparql')
 
     # Parse arguments
     args = parser.parse_args()
@@ -145,7 +149,7 @@ if __name__ == "__main__":
             os.makedirs(path)
 
     # Set up your sparql endpoint
-    sparql = SPARQLWrapper("http://collection.britishmuseum.org/sparql")
+    sparql = SPARQLWrapper(args.endpoint)
 
     # Read text file sparql query
     with open("sparql/" + args.template + ".txt", "r") as sparqlQuery:
