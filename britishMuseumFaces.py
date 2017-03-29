@@ -141,7 +141,7 @@ if __name__ == "__main__":
     basePath = args.path
 
     # Define the base directories
-    paths = {x: os.path.join(basePath, x) for x in [args.download, args.resized, args.montages, args.faces, 'opencv']}
+    paths = {x: os.path.join(basePath, x) for x in [args.download, args.resized, args.montages, args.faces, 'opencv', 'highlighted']}
 
     # Create them if they don't already exist
     for path in paths.values():
@@ -227,10 +227,17 @@ if __name__ == "__main__":
             top = 10
             bottom = 10
             print("Found {0} faces within the image".format(len(faces)))
+
             if len(faces) > 0:
                 for (x, y, w, h) in faces:
+                    cv2.rectangle(image, (x, y), (x + w, y + h), (102, 0, 204), 2)
+                    rectName = os.path.join(paths['highlighted'], "high_{1}_{0}".format(str(fn), str(x)))
+                    cv2.imwrite(rectName, image)
+                    print("Written highlighted face " + rectName)
                     image = image[y-top:y+h+bottom, x-left:x+w+right]
                     filename = os.path.join(paths[args.faces], "cropped_{1}_{0}".format(str(fn),str(x)))
+                    print("Written cropped face " + filename)
+
                     if not os.path.exists(filename):
                         cv2.imwrite(filename, image)
                         filesize = os.stat(filename).st_size
