@@ -1,0 +1,10 @@
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX crm: <http://erlangen-crm.org/current/>
+PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
+
+SELECT DISTINCT ?image
+WHERE {{
+  ?object bmo:PX_object_type ?object_type .
+  ?object_type skos:prefLabel "{string}" .
+  ?object bmo:PX_has_main_representation ?image .
+}} LIMIT 100

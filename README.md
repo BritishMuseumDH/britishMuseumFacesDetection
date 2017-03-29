@@ -7,6 +7,7 @@ This is a very simple example and pulls busts (100 of them) from the British Mus
 create image montages. Within the folder are all the files pulled from the example script.
 
 This example script uses a very simple SPARQL query to retrieve 100 British Museum records of busts, where an image exists.
+The query is now stored in the SPARQL directory as a text file. Take note of the format with curly braces doubled up.
 
 ```
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -41,8 +42,6 @@ All faces identified within the original images:
 
 ![](montages/bmPortraitBustsFaces_montage_750w.jpg)
 
-**I am rubbish at Python, so this is a learning project.**
-
 # To use
 
 Clone this folder to your computer:
@@ -59,7 +58,7 @@ Install the requirements (I recommend doing this in a virtual environment):
 
 Now run the script (for example):
 
-`$ python britishMuseumFaces.py -p . -d bmimages -f facesDetected -r bmimagesResized -m montages -s 200 -o 'bmImages' `
+`$ python britishMuseumFaces.py -p . -d bmimages -f facesDetected -r bmimagesResized -m montages -s 200 -o 'bmImages' -t 'default' -q "bust" `
 
 There are several arguments that you use for this script:
 
@@ -73,10 +72,13 @@ Mandatory:
 Optional
 * Size of cropped image: -s or --size (default 300)
 * Output file: -o or --output (default bmImages)
+* SPARQL template to use: -t or --template (default.txt is used)
+* The query to use: -q or --query (default "bust")
 
 This should run and output any error messages to your terminal. Within the script, progress is printed into your terminal
 window. You should see the following messages when running for the first time:
 
+* Your sparql query reads as: {query string}
 * Image {filename} downloaded **Multiple times**
 * Image path written to file **Multiple times**
 * {filename} resized **Multiple times**

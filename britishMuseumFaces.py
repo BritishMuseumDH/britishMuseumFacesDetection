@@ -124,13 +124,19 @@ if __name__ == "__main__":
     # An example would be: --resized '/Users/danielpett/githubProjects/scripts/bmimagesResized/'
 
     parser.add_argument('-o', '--output', help='The file name output for image magick', required="false", default='britishMuseumImages')
+    # An example would be 'britishMuseumPortraits'
+
+    parser.add_argument('-t', '--template', help='The spaqrl query template to use', required="false", default='default')
+    # An example would be 'default' as this is concatenated to default.txt
+
+    parser.add_argument('-q', '--query', help='The spaqrl query template to use', required="false", default='bust')
+    # An example would be 'bust'
 
     # Parse arguments
     args = parser.parse_args()
 
+    # Set base path
     basePath = args.path
-
-
 
     # Define the base directories
     paths = {x: os.path.join(basePath, x) for x in [args.download, args.resized, args.montages, args.faces, 'opencv']}
@@ -143,18 +149,16 @@ if __name__ == "__main__":
     # Set up your sparql endpoint
     sparql = SPARQLWrapper("http://collection.britishmuseum.org/sparql")
 
-    # Set your query
-    sparql.setQuery("""PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX crm: <http://erlangen-crm.org/current/>
-PREFIX fts: <http://www.ontotext.com/owlim/fts#>
-PREFIX bmo: <http://collection.britishmuseum.org/id/ontology/>
+    # Read text file sparql query
+    with open("sparql/" + args.template + ".txt", "r") as sparqlQuery:
+        # Format the query string retrieved from the text file with simple replacement
+        query = sparqlQuery.read().format(string = args.query)
 
-SELECT DISTINCT ?image
-WHERE {
-  ?object bmo:PX_object_type ?object_type .
-  ?object_type skos:prefLabel "bust" .
-  ?object bmo:PX_has_main_representation ?image .
-} LIMIT 100""")
+    # Return the query for the user to see
+    print("Your sparql query reads as: \n" + query)
+
+    # Set your query
+    sparql.setQuery(query)
 
     # Return the JSON triples
     sparql.setReturnFormat(JSON)
@@ -162,7 +166,6 @@ WHERE {
 
     # Open the file for writing urls (this is for image magick)
     listImages = open(os.path.join(paths[args.resized], "files.txt"), 'w')
-
 
     # Iterate over the results
     for result in results["results"]["bindings"]:
@@ -222,7 +225,7 @@ WHERE {
             top = 10
             bottom = 10
             print("Found {0} faces within the image".format(len(faces)))
-            if(len(faces) > 0):
+            if len(faces) > 0:
                 for (x, y, w, h) in faces:
                     image = image[y-top:y+h+bottom, x-left:x+w+right]
                     filename = os.path.join(paths[args.faces], "cropped_{1}_{0}".format(str(fn),str(x)))
