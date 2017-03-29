@@ -124,13 +124,19 @@ if __name__ == "__main__":
     # An example would be: --resized '/Users/danielpett/githubProjects/scripts/bmimagesResized/'
 
     parser.add_argument('-o', '--output', help='The file name output for image magick', required="false", default='britishMuseumImages')
+    # An example would be 'britishMuseumPortraits'
+
+    parser.add_argument('-t', '--template', help='The spaqrl query template to use', required="false", default='default')
+    # An example would be 'default' as this is concatenated to default.txt
+
+    parser.add_argument('-q', '--query', help='The spaqrl query template to use', required="false", default='bust')
+    # An example would be 'bust'
 
     # Parse arguments
     args = parser.parse_args()
 
+    # Set base path
     basePath = args.path
-
-
 
     # Define the base directories
     paths = {x: os.path.join(basePath, x) for x in [args.download, args.resized, args.montages, args.faces, 'opencv']}
@@ -144,10 +150,13 @@ if __name__ == "__main__":
     sparql = SPARQLWrapper("http://collection.britishmuseum.org/sparql")
 
     # Read text file sparql query
-    with open("sparql/default.txt", "r") as sparqlQuery:
-        query = sparqlQuery.read()
+    with open("sparql/" + args.template + ".txt", "r") as sparqlQuery:
+        # Format the query string retrieved from the text file with simple replacement
+        query = sparqlQuery.read().format(string = args.query)
 
+    # Return the query for the user to see
     print("Your sparql query reads as: \n" + query)
+
     # Set your query
     sparql.setQuery(query)
 
@@ -157,7 +166,6 @@ if __name__ == "__main__":
 
     # Open the file for writing urls (this is for image magick)
     listImages = open(os.path.join(paths[args.resized], "files.txt"), 'w')
-
 
     # Iterate over the results
     for result in results["results"]["bindings"]:
@@ -217,7 +225,7 @@ if __name__ == "__main__":
             top = 10
             bottom = 10
             print("Found {0} faces within the image".format(len(faces)))
-            if(len(faces) > 0):
+            if len(faces) > 0:
                 for (x, y, w, h) in faces:
                     image = image[y-top:y+h+bottom, x-left:x+w+right]
                     filename = os.path.join(paths[args.faces], "cropped_{1}_{0}".format(str(fn),str(x)))
