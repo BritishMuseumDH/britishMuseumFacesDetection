@@ -104,6 +104,7 @@ MIT for script. CC-BY-NC-SA for all image content, copyright the Trustees of the
 # Authors
 
 * Daniel Pett, The British Museum @portableant
+* Harrison Pim, The British Museum @harrisonpim
 * Ben O'Steen, The British Library @benosteen
 * Richard Wareham, Cambridge University @rjw57
 * Matthew Vincent, Rekrei @neshmi
