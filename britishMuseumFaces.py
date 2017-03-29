@@ -9,14 +9,15 @@ import cv2
 import argparse
 import time
 
-# Retrieve images from British Museum Research Space and perform montage and facial recognition
+# Retrieve images from British Museum Research Space and perform montage and
+# facial recognition
+
 # Daniel Pett 21/3/2017
 # British Museum content is under a CC-BY-SA-NC license
 # Tested on Python 2.7.13, 3.5.2
-
 __author__ = "Daniel Pett"
-__credits__ =  ["Richard Wareham", "Ben O'Steen", "Matthew Vincent",
-                "Harrison Pim"]
+__credits__ = ["Richard Wareham", "Ben O'Steen", "Matthew Vincent",
+               "Harrison Pim"]
 __license__ = 'MIT'
 __version__ = "1.0.1"
 __maintainer__ = "Daniel Pett"
@@ -30,7 +31,7 @@ def make_executable(path):
     :return:
     """
     mode = os.stat(path).st_mode
-    mode |= (mode & 0o444) >> 2    # copy R bits to X
+    mode |= (mode & 0o444) >> 2  # copy R bits to X
     os.chmod(path, mode)
 
 
@@ -48,12 +49,14 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
                    then the image will not save
         ValueError: thrown if an invalid `crop_type` is provided as an argument
     """
-    # Resizing is done in this order: if height is higher than width resize is vertical, default is horizontal resize
+    # Resizing is done in this order: if height is higher than width resize is
+    # vertical, default is horizontal resize
     img = Image.open(img_path)
     # Get current and desired ratio for the images
     img_ratio = img.size[0] / float(img.size[1])
     ratio = size[0] / float(size[1])
-    # As mentioned above, the image is scaled and cropped vertically or horizontally depending on the ratio.
+    # As mentioned above, the image is scaled and cropped vertically or
+    # horizontally depending on the ratio.
     if ratio > img_ratio:
         img = img.resize((size[0], size[0] * img.size[1] / img.size[0]),
                          Image.ANTIALIAS)
@@ -65,12 +68,12 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
                    img.size[0], (img.size[1] + size[1]) / 2)
         elif crop_type == 'bottom':
             box = (0, img.size[1] - size[1], img.size[0], img.size[1])
-        else :
+        else:
             raise ValueError('Error detected: Option is not valid for crop type')
         img = img.crop(box)
     elif ratio < img_ratio:
         img = img.resize((size[1] * img.size[0] / img.size[1], size[1]),
-                Image.ANTIALIAS)
+                         Image.ANTIALIAS)
         # Switch for position of crop
         if crop_type == 'top':
             box = (0, 0, size[0], img.size[1])
@@ -79,12 +82,12 @@ def resize_and_crop(img_path, modified_path, size, crop_type='top'):
                    (img.size[0] + size[0]) / 2, img.size[1])
         elif crop_type == 'bottom':
             box = (img.size[0] - size[0], 0, img.size[0], img.size[1])
-        else :
+        else:
             raise ValueError('Error detected: Option is not valid for crop type')
         img = img.crop(box)
-    else :
+    else:
         img = img.resize((size[0], size[1]),
-                Image.ANTIALIAS)
+                         Image.ANTIALIAS)
     img.save(modified_path)
 
 
@@ -119,31 +122,31 @@ def create_montage(fn):
             # Make sure you are in correct directory
             make_executable(fn)
             print("Now creating image montage of all retrieved images")
-            subprocess.call("montage @" + os.path.basename(fn)
-                            + " -border 0 -geometry 660x -tile 10x10 "
-                            + "/".join([args.montages, args.output]) + ".jpg",
+            subprocess.call("montage @" + os.path.basename(fn) +
+                            " -border 0 -geometry 660x -tile 10x10 " +
+                            "/".join([args.montages, args.output]) + ".jpg",
                             shell=True)
 
             print("Now resizing image montage of all retrieved images")
-            subprocess.call("convert " + "/".join([args.montages, args.output])
-                            + ".jpg -resize 750 "
-                            + "/".join([args.montages, args.output])
-                            + "_montage_750w.jpg",
+            subprocess.call("convert " + "/".join([args.montages, args.output]) +
+                            ".jpg -resize 750 " +
+                            "/".join([args.montages, args.output]) +
+                            "_montage_750w.jpg",
                             shell=True)
 
             # This call makes a montage of the faces detected
             print("Now creating image montage of all faces detected in images")
-            subprocess.call("montage -border 0 -geometry 660x -tile " + dims
-                            + " " + args.faces + "/* "
-                            + "/".join([args.montages, args.output])
-                            + "Faces.jpg",
+            subprocess.call("montage -border 0 -geometry 660x -tile " + dims +
+                            " " + args.faces + "/* " +
+                            "/".join([args.montages, args.output]) +
+                            "Faces.jpg",
                             shell=True)
 
             print("Now resizing image montage of all faces detected in images")
-            subprocess.call("convert " + "/".join([args.montages, args.output])
-                            + "Faces.jpg -resize 750 "
-                            + "/".join([args.montages, args.output])
-                            + "Faces_montage_750w.jpg",
+            subprocess.call("convert " + "/".join([args.montages, args.output]) +
+                            "Faces.jpg -resize 750 " +
+                            "/".join([args.montages, args.output]) +
+                            "Faces_montage_750w.jpg",
                             shell=True)
         except:
             # The process failed
@@ -227,8 +230,8 @@ if __name__ == "__main__":
 
     # Read text file sparql query
     with open("sparql/" + args.template + ".txt", "r") as sparqlQuery:
-        # Format the query string retrieved from the text file with simple replacement
-        query = sparqlQuery.read().format(string = args.query)
+        # Format query string retrieved from text file with simple replacement
+        query = sparqlQuery.read().format(string=args.query)
 
     # Return the query for the user to see
     print("Your sparql query reads as: \n" + query)
@@ -264,7 +267,7 @@ if __name__ == "__main__":
     for fn in os.listdir(paths[args.download]):
         # Make sure file is not a hidden one etc
         if not fn.startswith('.') and os.path.isfile(os.path.join(paths[args.download], fn)):
-            # Open the file checking if it is valid or not. It fails otherwise :-(
+            # Open the file checking if it is valid or not. It fails otherwise
             try:
                 if not os.path.exists(os.path.join(paths[args.resized], fn)):
                     resize_and_crop(os.path.join(paths[args.download], fn),
@@ -308,9 +311,8 @@ if __name__ == "__main__":
                                                                      str(x)))
                     if not os.path.exists(filename):
                         cv2.imwrite(filename, image)
-                        filesize = os.stat(filename).st_size
                         try:
-                            if not filesize ==0:
+                            if os.stat(filename).st_size != 0:  # check filesize
                                 resize_and_crop(filename, filename,
                                                 (args.size, args.size),
                                                 crop_type='middle')
