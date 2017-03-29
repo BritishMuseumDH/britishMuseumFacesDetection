@@ -85,6 +85,8 @@ window. You should see the following messages when running for the first time:
 * {filename} resized **Multiple times**
 * Detecting faces in {filename} **Multiple times**
 * Found {number of} faces within the image **Multiple times**
+* Written cropped face {filename} **Multiple times**
+* Written highlighted face {filename} **Multiple times**
 * The time taken to process face detection was: --- {x} seconds ---
 * {Total number of } faces were identified in total
 * The dimensions of the montage are {XbyY}
