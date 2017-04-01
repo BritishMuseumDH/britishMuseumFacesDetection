@@ -46,11 +46,11 @@ All faces identified within the original images:
 
 Clone this folder to your computer:
 
-`$ git clone https://github.com/BritishMuseumDH/britishMuseumFaceDetection.git`
+`$ git clone https://github.com/BritishMuseumDH/britishMuseumFacesDetection.git`
 
 Change to the directory:
 
-`$ cd britishMuseumFaceDetection`
+`$ cd britishMuseumFacesDetection`
 
 Install the requirements (I recommend doing this in a virtual environment):
 
