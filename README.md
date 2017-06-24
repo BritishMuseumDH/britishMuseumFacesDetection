@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/85840636.svg)](https://zenodo.org/badge/latestdoi/85840636)
+
 ## A demonstration script for facial detection
 
 This repository holds a sample terminal script for interacting with the British Museum's [RDF endpoint](http://collection.britishmuseum.org) to retrieve images and then
